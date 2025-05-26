@@ -169,7 +169,7 @@ sns.boxplot(
 #### The t-test for two independent samples
 
 ```python
-
+# We denken: 2 verschillende testgroepen
 # Sample:
 control = np.array([91, 87, 99, 77, 88, 91])
 treatment = np.array([101, 110, 103, 93, 99, 104])
@@ -182,6 +182,7 @@ stats.ttest_ind(a=control, b=treatment,
 #### The t-test for paired samples
 
 ```python
+# We denken: 1 groep, met verschillende omstandigheden
 # Paired t-test with ttest_rel()
 stats.ttest_rel(regular, additives, alternative='less')
 ```
