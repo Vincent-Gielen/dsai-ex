@@ -1,4 +1,4 @@
-## Analysis 1 avriable
+## 2. Analysis 1 variable
 
 ### Formulas
 
@@ -83,10 +83,22 @@ print("Critical value     : %.4f" % g)
 ```python
 observed =   np.array([   127,      75,      98,     27,     73])
 expected_p = np.array([   .35,     .17,     .23,    .08,    .17])
+alpha = 0.05               # Significance level
 n = sum(observed)          # Sample size
+k = len(observed)          # Number of categories
+dof = k - 1                # Degrees of freedom
 expected = expected_p * n  # Expected absolute frequencies in the sample
+g = stats.chi2.isf(alpha, df=dof)  # Critical value
+
 # Goodness-of-fit-test in Python:
 chi2, p = stats.chisquare(f_obs=observed, f_exp=expected)
+
+print("Significance level  ⍺ = %.2f" % alpha)
+print("Sample size         n = %d" % n)
+print("k = %d; df = %d" % (k, dof))
+print("Chi-squared        χ² = %.4f" % chi2)
+print("Critical value      g = %.4f" % g)
+print("p-value             p = %.4f" % p)
 ```
 
 4. Standardised residuals:
@@ -126,4 +138,7 @@ chi2, p = stats.chisquare(f_obs=families.observed, f_exp=families.expected)
 print("Chi-squared   χ² = %.4f" % chi2)
 print("Critical value g = %.4f" % g)
 print("p-value        p = %f"   % p)
+
+(observed - expected) / np.sqrt(expected * (1-expected_p))
+# Dit moet binnen [-2, 2] liggen.
 ```
