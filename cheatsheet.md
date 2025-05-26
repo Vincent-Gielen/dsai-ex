@@ -1,5 +1,30 @@
+## Analysis 1 avriable
+
+### Formulas
+
+```python
+# Centrality and dispersion deasures
+# Mean, standard deviation & friends
+print(f"Mean:                 {tips.tip.mean()}")
+print(f"Standard deviation:   {tips.tip.std()}") # Pay attention: n-1 in the denominator
+print(f"Variance:             {tips.tip.var()}") # Pay attention: n-1 in the denominator
+print(f"Skewness:             {tips.tip.skew()}")
+print(f"Kurtosis:             {tips.tip.kurtosis()}")
+
+# Median & co
+print(f"Minimum:              {tips.tip.min()}")
+print(f"Median:               {tips.tip.median()}")
+print(f"Maximum:              {tips.tip.max()}")
+percentiles = [0.0, 0.25, 0.5, 0.75, 1.0]
+print(f"Percentiles           {percentiles}\n{tips.tip.quantile(percentiles)}" )
+print(f"Inter Quartile Range: {stats.iqr(tips.tip)}")
+print(f"Range :               {tips.tip.max() - tips.tip.min()}")
+```
+
 ## 4. Bivariate - qual + qual
+
 ### Plots
+
 ```python
 # Contingency table without the margins
 observed_p = pd.crosstab(rlanders.Gender, rlanders.Survey, normalize='index')
@@ -27,6 +52,7 @@ tplot.axvline(chi2, color='orange')  # chi-squared
 ### Formulas
 
 1. Cramer's V:
+
 ```python
 import scipy.stats as stats
 
@@ -36,6 +62,7 @@ print(f"Cramer's V: {cramers_v}")
 ```
 
 2. Chi-squared test for independence:
+
 ```python
 # Chi-squared test for independence based on a contingency table
 observed = pd.crosstab(rlanders.Survey, rlanders.Gender)
@@ -52,6 +79,7 @@ print("Critical value     : %.4f" % g)
 ```
 
 3. Goodness-of-fit test:
+
 ```python
 observed =   np.array([   127,      75,      98,     27,     73])
 expected_p = np.array([   .35,     .17,     .23,    .08,    .17])
@@ -62,6 +90,7 @@ chi2, p = stats.chisquare(f_obs=observed, f_exp=expected)
 ```
 
 4. Standardised residuals:
+
 ```python
 # Data frame with 2 columns:
 #  - number of boys in the family (index)
