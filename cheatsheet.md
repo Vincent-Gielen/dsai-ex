@@ -1,25 +1,34 @@
-## 2. Analysis 1 variable
+# DSAI Cheatsheet
+
+## 2. Analysis: 1 Variable
 
 ### Formulas
 
 ```python
-# Centrality and dispersion deasures
-# Mean, standard deviation & friends
+# Centrality and dispersion measures
 print(f"Mean:                 {tips.tip.mean()}")
-print(f"Standard deviation:   {tips.tip.std()}") # Pay attention: n-1 in the denominator
-print(f"Variance:             {tips.tip.var()}") # Pay attention: n-1 in the denominator
+print(f"Standard deviation:   {tips.tip.std()}")     # n-1 in denominator
+print(f"Variance:             {tips.tip.var()}")     # n-1 in denominator
 print(f"Skewness:             {tips.tip.skew()}")
 print(f"Kurtosis:             {tips.tip.kurtosis()}")
 
-# Median & co
+# Median & related statistics
 print(f"Minimum:              {tips.tip.min()}")
 print(f"Median:               {tips.tip.median()}")
 print(f"Maximum:              {tips.tip.max()}")
+
 percentiles = [0.0, 0.25, 0.5, 0.75, 1.0]
-print(f"Percentiles           {percentiles}\n{tips.tip.quantile(percentiles)}" )
+print(f"Percentiles           {percentiles}\n{tips.tip.quantile(percentiles)}")
+
 print(f"Inter Quartile Range: {stats.iqr(tips.tip)}")
-print(f"Range :               {tips.tip.max() - tips.tip.min()}")
+print(f"Range:                {tips.tip.max() - tips.tip.min()}")
 ```
+
+## 3. Central-limit-testing
+
+### Plots
+
+### Formulas
 
 ## 4. Bivariate - qual + qual
 
@@ -28,12 +37,11 @@ print(f"Range :               {tips.tip.max() - tips.tip.min()}")
 ```python
 # Contingency table without the margins
 observed_p = pd.crosstab(rlanders.Gender, rlanders.Survey, normalize='index')
-
 # Horizontally oriented stacked bar chart
 observed_p.plot(kind='barh', stacked=True);
+```
 
-
-
+```python
 # x-values:
 x = np.linspace(0, 15, num=100)
 # probability density of the chi-squared distribution with 4 degrees of freedom
@@ -51,7 +59,7 @@ tplot.axvline(chi2, color='orange')  # chi-squared
 
 ### Formulas
 
-1. Cramer's V:
+#### 1. Cramer's V
 
 ```python
 import scipy.stats as stats
@@ -61,7 +69,7 @@ cramers_v = stats.contingency.association(observed, method='cramer')
 print(f"Cramer's V: {cramers_v}")
 ```
 
-2. Chi-squared test for independence:
+#### 2. Chi-squared test for independence
 
 ```python
 # Chi-squared test for independence based on a contingency table
@@ -78,7 +86,7 @@ g = stats.chi2.isf(alpha, df = dof)
 print("Critical value     : %.4f" % g)
 ```
 
-3. Goodness-of-fit test:
+#### 3. Goodness-of-fit test
 
 ```python
 observed =   np.array([   127,      75,      98,     27,     73])
@@ -101,7 +109,7 @@ print("Critical value      g = %.4f" % g)
 print("p-value             p = %.4f" % p)
 ```
 
-4. Standardised residuals:
+#### 4. Standardised residuals
 
 ```python
 # Data frame with 2 columns:
