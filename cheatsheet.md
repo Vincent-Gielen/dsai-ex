@@ -62,8 +62,7 @@ tplot.axvline(chi2, color='orange')  # chi-squared
 #### 1. Cramer's V
 
 ```python
-import scipy.stats as stats
-
+observed = pd.crosstab(rlanders.Survey, rlanders.Gender)
 # observed is your contingency table (2D array or DataFrame)
 cramers_v = stats.contingency.association(observed, method='cramer')
 print(f"Cramer's V: {cramers_v}")
@@ -82,7 +81,7 @@ print("P-value           : %.4f" % p)
 
 # Calculate critical value
 alpha = .05
-g = stats.chi2.isf(alpha, df = dof)
+g = stats.chi2.isf(alpha, df = df)
 print("Critical value     : %.4f" % g)
 ```
 
