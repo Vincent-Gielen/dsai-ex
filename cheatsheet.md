@@ -149,3 +149,58 @@ print("p-value        p = %f"   % p)
 (observed - expected) / np.sqrt(expected * (1-expected_p))
 # Dit moet binnen [-2, 2] liggen.
 ```
+
+## 5. Bivariate - qual + quant
+
+### Plots
+
+```python
+# Sample:
+control = np.array([91, 87, 99, 77, 88, 91])
+treatment = np.array([101, 110, 103, 93, 99, 104])
+# Visualization:
+sns.boxplot(
+    data=pd.DataFrame({'control': control, 'treatment': treatment}),
+    orient='h');
+```
+
+### Formulas
+
+#### The t-test for two independent samples
+
+```python
+
+# Sample:
+control = np.array([91, 87, 99, 77, 88, 91])
+treatment = np.array([101, 110, 103, 93, 99, 104])
+
+stats.ttest_ind(a=control, b=treatment,
+    alternative='less', equal_var=False)
+#we verwachten hier dat control less is dan treatment, andere opties in alternative zijn mogelijk
+```
+
+#### The t-test for paired samples
+
+```python
+# Paired t-test with ttest_rel()
+stats.ttest_rel(regular, additives, alternative='less')
+```
+
+#### Effect size - Cohen's d
+
+```python
+#Effect size is another metric to express the magnitude of the difference between two groups. Several definitions of effect size exist, but one of the most commonly used is Cohen's d.
+
+#Cohen's d is defined as the difference between the means of both groups, divided by a pooled standard deviation. There's no Python function for calculating Cohen's d readily available, so we define it here, according to the formula:
+
+def cohen_d(a, b):
+    na = len(a)
+    nb = len(b)
+    pooled_sd = np.sqrt( ((na-1) * np.var(a, ddof=1) +
+                          (nb-1) * np.var(b, ddof=1)) / (na + nb - 2) )
+    return (np.mean(b) - np.mean(a)) / pooled_sd
+
+# Effect size of additives in gasoline:
+cohen_d(regular, additives)
+
+```
