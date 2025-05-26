@@ -1,5 +1,30 @@
 ## 4. Bivariate - qual + qual
-### Chi-squared
+### Plots
+```python
+# Contingency table without the margins
+observed_p = pd.crosstab(rlanders.Gender, rlanders.Survey, normalize='index')
+
+# Horizontally oriented stacked bar chart
+observed_p.plot(kind='barh', stacked=True);
+
+
+
+# x-values:
+x = np.linspace(0, 15, num=100)
+# probability density of the chi-squared distribution with 4 degrees of freedom
+y = stats.chi2.pdf(x, df=df)
+# the number q for which the right tail probability is exactly 5%:
+q = stats.chi2.isf(alpha, df=4)  # TODO: CHECK this!
+
+fig, tplot = plt.subplots(1, 1)
+tplot.plot(x, y)                     # probability density
+tplot.fill_between(x, y, where=x>=q, # critical area
+    color='lightblue')
+tplot.axvline(q)                     # critical value
+tplot.axvline(chi2, color='orange')  # chi-squared
+```
+
+### Formulas
 
 1. Cramer's V:
 ```python
