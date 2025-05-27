@@ -237,6 +237,15 @@ Residual: The vertical distance from the horizontal axis to any point, can be de
 and the second is called the residual. So a fitted value is the predicted value of the dependent variable. The corresponding residual is the difference between the actual and fitted values of the dependent variable.
 
 ```python
+import math
+
+# set the minimum and maximum value of the x- and y-axis
+xmin = math.floor(male_chinstrap['flipper_length_mm'].min() / 10) * 10
+xmax = math.ceil(male_chinstrap['flipper_length_mm'].max() / 10) * 10
+
+ymin = math.floor(male_chinstrap['body_mass_g'].min() / 10) * 10
+ymax = math.ceil(male_chinstrap['body_mass_g'].max() / 10) * 10
+
 least_squares = pd.DataFrame({
         'x': male_chinstrap.flipper_length_mm,
         'y': male_chinstrap.body_mass_g
@@ -264,6 +273,16 @@ print(f"beta_0 = {my:.4f} - {beta1:.4f} * {mx:.4f} = {beta0:.4f}")
 print(f"ŷ = {beta0:.4f} + {beta1:.4f} x")
 ```
 
+Bijhorende plot:
+
+```python
+x_values = [xmin, xmax]
+y_values = [beta1 * x_values[0] + beta0, beta1 * x_values[1] + beta0]
+
+sns.lineplot(x=x_values, y=y_values);
+sns.scatterplot(x=male_chinstrap.flipper_length_mm, y=male_chinstrap.body_mass_g);
+```
+
 ```python
 # Met korte formule
 from sklearn.linear_model import LinearRegression
@@ -274,6 +293,14 @@ male_chinstrap_y = male_chinstrap.body_mass_g
 weight_model = LinearRegression().fit(male_chinstrap_x, male_chinstrap_y)
 
 print(f"Regression line: ŷ = {weight_model.intercept_:.4f} + {weight_model.coef_[0]:.4f} x")
+```
+
+```python
+#Methode voor B0 en B1
+x = cats[cats['Sex'] == 'F']['Hwt']
+y = cats[cats['Sex'] == 'F']['Bwt']
+a, b = np.polyfit(x, y, 1)
+print(f' y {a} * x + {b}')
 ```
 
 #### Covariance
