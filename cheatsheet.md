@@ -300,7 +300,7 @@ print(f"Regression line: ŷ = {weight_model.intercept_:.4f} + {weight_model.coef
 x = cats[cats['Sex'] == 'F']['Hwt']
 y = cats[cats['Sex'] == 'F']['Bwt']
 a, b = np.polyfit(x, y, 1)
-print(f' y {a} * x + {b}')
+print(f' y = {a} * x + {b}')
 ```
 
 #### Covariance
