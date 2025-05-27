@@ -205,3 +205,168 @@ def cohen_d(a, b):
 cohen_d(regular, additives)
 
 ```
+
+## 6. Bivariate - quant + quant -  Regression analysis
+
+### Plots
+
+```python
+penguins = sns.load_dataset('penguins')
+# Independent variable on X-axis, dependent on Y-axis
+sns.relplot(data=penguins,
+            x='flipper_length_mm', y='body_mass_g', 
+            hue='species', style='sex');
+```
+
+```python
+sns.scatterplot(data=male_chinstrap, x='flipper_length_mm', y='body_mass_g');
+```
+
+```python
+# Plot a data set with its regression line
+sns.lmplot(data=male_chinstrap, x='flipper_length_mm', y='body_mass_g');
+```
+
+### Formulas
+
+#### Method of least squares
+
+To predict value of Y if you know X.
+
+Residual: The vertical distance from the horizontal axis to any point, can be decomposed into two parts: the vertical distance from the horizontal axis to the line, and the vertical distance from the line to the point. The first of these is called the fitted value,
+and the second is called the residual. So a fitted value is the predicted value of the dependent variable. The corresponding residual is the difference between the actual and fitted values of the dependent variable.
+
+```python
+least_squares = pd.DataFrame({
+        'x': male_chinstrap.flipper_length_mm,
+        'y': male_chinstrap.body_mass_g
+    })
+mx = least_squares.x.mean()
+my = least_squares.y.mean()
+
+least_squares['(x-x̄)'] = least_squares['x'] - mx
+least_squares['(y-ȳ)'] = least_squares['y'] - my
+
+least_squares['(x-x̄)(y-ȳ)'] = least_squares['(x-x̄)'] * least_squares['(y-ȳ)']
+least_squares['(x-x̄)²'] = least_squares['(x-x̄)'] ** 2
+least_squares
+```
+
+```python
+# Numerator and denomitator of the formula for b_0:
+num = sum(least_squares['(x-x̄)(y-ȳ)'])
+denom = sum(least_squares['(x-x̄)²'])
+beta1 = num/denom
+beta0 = my - beta1 * mx
+
+print(f"beta_1 = {num:.4f} / {denom:.4f} = {beta1:.4f}")
+print(f"beta_0 = {my:.4f} - {beta1:.4f} * {mx:.4f} = {beta0:.4f}")
+print(f"ŷ = {beta0:.4f} + {beta1:.4f} x")
+```
+
+```python
+# Met korte formule
+from sklearn.linear_model import LinearRegression
+
+male_chinstrap_x = male_chinstrap.flipper_length_mm.values.reshape(-1,1)
+male_chinstrap_y = male_chinstrap.body_mass_g
+
+weight_model = LinearRegression().fit(male_chinstrap_x, male_chinstrap_y)
+
+print(f"Regression line: ŷ = {weight_model.intercept_:.4f} + {weight_model.coef_[0]:.4f} x")
+```
+
+#### Covariance
+
+Covariance is a measure that indicates whether a (linear) relationship
+between two variables is increasing or decreasing.
+
+Note: Covariance of population (denominator 𝑛) vs. sample (denominator 𝑛 − 1)
+
+Cov > 0: increasing  
+Cov ≈ 0: no relationship  
+Cov < 0: decreasing
+
+Covariance kan serieus verschillen adhv welke meeteeinheid je gebruikt. Cov van 2500 in g, is maar 2.5 in kg.
+
+```python
+# Calculate covar using the formula
+covar = sum((male_chinstrap.flipper_length_mm - male_chinstrap.flipper_length_mm.mean()) * 
+            (male_chinstrap.body_mass_g - male_chinstrap.body_mass_g.mean())) / (len(male_chinstrap) - 1)
+        
+print(f"Cov(x,y) = {covar}")
+```
+
+```python
+# Met functie
+np.cov(
+    male_chinstrap.flipper_length_mm,
+    male_chinstrap.body_mass_g,
+    ddof=1)[0][1]
+```
+
+#### Pearson's product-moment corelation coefficient
+
+𝑅 is a measure for
+the strength of a linear correlation between 𝑥 and 𝑦.
+
+Correlation is a unitless quantity that is unaffected by the measurement scale. For example, the correlation
+is the same regardless of whether the variable X (e.g. height of a person) is measured in millimeters, centimeters, decimeters or meters.
+
+Always between -1 and 1. The closer to -1 or 1, the closer the points in a scatterplot are to a striaght line.
+
+Bvb: R = (-)0.8 -> (decreasing)increasing and strong linear relation
+
+```python
+# Correlation calculated from covariance
+stdx = male_chinstrap.flipper_length_mm.std()
+stdy = male_chinstrap.body_mass_g.std()
+
+R1 = covar / (stdx * stdy)
+print(f"R ≈ {covar:.4f} / ( {stdx:.4f} * {stdy:.4f} ) ≈ {R1:.4f}")
+```
+
+```python
+# Correlation from elaborated formula
+xx = male_chinstrap.flipper_length_mm - male_chinstrap.flipper_length_mm.mean()
+yy = male_chinstrap.body_mass_g - male_chinstrap.body_mass_g.mean()
+R2 = sum(xx * yy) / (np.sqrt(sum(xx ** 2) * sum(yy ** 2)))
+print(f"R ≈ {R2:.4f}")
+```
+
+```python
+# Python function numpy.corrcoef() - returns a matrix, like numpy.cov()
+cor = np.corrcoef(
+    male_chinstrap.flipper_length_mm,
+    male_chinstrap.body_mass_g)[0][1]
+print(f"R ≈ {cor:.4f}")
+```
+
+#### Coefficient of determenation
+
+R**2: Zelfde als hierboven, maar ^2 -> makkelijker af te lezen.
+
+| $abs(R)$  |  $R^2$   | Explained variance |   Linear relation    |
+| :-------: | :------: | :----------------: | :------------------: |
+|   < .3    |   < .1   |       < 10%        |      very weak       |
+|  .3 - .5  | .1 - .25 |     10% - 25%      |         weak         |
+|  .5 - .7  | .25 - .5 |     25% - 50%      |       moderate       |
+| .7 - .85  | .5 - .75 |     50% - 75%      |        strong        |
+| .85 - .95 | .75 - .9 |     75% - 90%      |     very strong      |
+|   > .95   |   > .9   |       > 90%        | exceptionally strong |
+
+Remark that the value of R doesn't say anything about the steepness of the regression line! It only indicates how close the observations are to the regression line. Therefore, it is wrong to say that a value of e.g. R = 0.8 indicates a strongly increasing linear relation! Instead, you should say it indicates an _increasing and strong linear relation_.
+
+```python
+# Bovenstaande formules voor R te berekenen, en dan
+cor ** 2
+```
+
+```python
+# OF
+chinstrap_x = male_chinstrap.flipper_length_mm.values.reshape(-1,1)
+chinstrap_y = male_chinstrap.body_mass_g
+
+families_model = LinearRegression().fit(chinstrap_x, chinstrap_y)
+families_model.score(chinstrap_x, chinstrap_y)
+```
