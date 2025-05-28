@@ -397,3 +397,13 @@ chinstrap_y = male_chinstrap.body_mass_g
 families_model = LinearRegression().fit(chinstrap_x, chinstrap_y)
 families_model.score(chinstrap_x, chinstrap_y)
 ```
+
+## 7. Time series analysis
+
+## Extra
+
+Drop all NAN data
+
+```python
+data = data.dropna()
+```
