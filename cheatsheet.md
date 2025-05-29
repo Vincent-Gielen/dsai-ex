@@ -407,3 +407,15 @@ Drop all NAN data
 ```python
 data = data.dropna()
 ```
+
+Maak van datum in string formaat een echte datum
+
+```python
+data.datumKolom = pd.to_datetime(data.datumKolom, format='%Y/%m/%d')
+```
+
+Voornamelijk voor H7: Maak van datums de index
+
+```python
+data.set_index('datumKolom', inplace = True)
+```
